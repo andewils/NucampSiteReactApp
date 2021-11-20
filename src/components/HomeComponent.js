@@ -1,13 +1,13 @@
 import React from 'react';
-import { Card, CardImg, CradText, CardBody, CardTitle } from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
 
-function RenderCard({item}) {
+function RenderCard({ item }) {
     return (
         <Card>
             <CardImg src={item.image} alt={item.name} />
             <CardBody>
                 <CardTitle>{item.name}</CardTitle>
-                <CardTitle>{item.description}</CardTitle>
+                <CardText>{item.description}</CardText>
             </CardBody>
         </Card>
     );
