@@ -1,7 +1,12 @@
 import React, { Component } from "react";
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, ModalHeader, ModalBody, Label } from 'reactstrap';
+import {
+    Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem,
+    Button, Modal, ModalHeader, ModalBody, Label
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 const maxLength = len => val => !val || (val.length <= len);
 const minLength = len => val => val && (val.length >= len);
@@ -22,7 +27,7 @@ class CommentForm extends Component {
     }
     handleSubmit(values) {
         this.toggleModal();
-        this.props.addComment(this.props.campsiteId, values.rating, values.author,  values.text);
+        this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
         console.log('Current state is: ' + JSON.stringify(values));
         alert('Current state is: ' + JSON.stringify(values));
     }
@@ -49,10 +54,10 @@ class CommentForm extends Component {
                             </div>
                             <div className="form-group">
                                 <Label htmlFor="author">Your Name</Label>
-                                <Control.text 
-                                    className="form-control" 
-                                    model=".author" 
-                                    id="author" 
+                                <Control.text
+                                    className="form-control"
+                                    model=".author"
+                                    id="author"
                                     name="author"
                                     placeholder="Your Name"
                                     validators={{
@@ -73,11 +78,11 @@ class CommentForm extends Component {
                             </div>
                             <div className="form-group">
                                 <Label htmlFor="text">Comment</Label>
-                                <Control.textarea 
-                                    className="form-control" 
-                                    model=".text" 
-                                    id="text" 
-                                    name="text" 
+                                <Control.textarea
+                                    className="form-control"
+                                    model=".text"
+                                    id="text"
+                                    name="text"
                                     rows="6"
                                 />
                             </div>
@@ -94,7 +99,7 @@ function RenderCampsite({ campsite }) {
     return (
         <div className="col-md-5 m-1">
             <Card>
-                <CardImg top src={campsite.image} alt={campsite.name} />
+                <CardImg top src={baseUrl + campsite.image} alt={campsite.name} />
                 <CardBody>
                     <CardTitle>{campsite.name}</CardTitle>
                     <CardText>{campsite.description}</CardText>
@@ -128,6 +133,26 @@ function RenderComments({ comments, addComment, campsiteId }) {
 
 
 function CampsiteInfo(props) {
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    if (props.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <div className="col">
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     if (props.campsite) {
         return (
             <div className="container">
@@ -143,8 +168,8 @@ function CampsiteInfo(props) {
                 </div>
                 <div className="row">
                     <RenderCampsite campsite={props.campsite} />
-                    <RenderComments 
-                        comments={props.comments} 
+                    <RenderComments
+                        comments={props.comments}
                         addComment={props.addComment}
                         campsiteId={props.campsite.id}
                     />
